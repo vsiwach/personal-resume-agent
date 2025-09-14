@@ -2,8 +2,12 @@
 data/
 *.pdf
 persona.txt
-*resume*
-*cv*
+*resume.pdf
+*resume.docx
+*resume.txt
+*cv.pdf
+*cv.docx
+*cv.txt
 
 # Python
 __pycache__/

@@ -1,0 +1,64 @@
+# Personal/Private Data - DO NOT COMMIT
+data/
+*.pdf
+persona.txt
+*resume*
+*cv*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MCP/Claude
+claude_desktop_config.json
+
+# Vector Database
+data/resume_vectordb/
+
+# Test files
+test_*.txt
+debug_*.py

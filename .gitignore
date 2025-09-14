@@ -1,6 +1,8 @@
 # Personal/Private Data - DO NOT COMMIT
-data/
-*.pdf
+data/*.pdf
+data/*.docx
+data/*.txt
+data/resume_vectordb/
 persona.txt
 *resume.pdf
 *resume.docx

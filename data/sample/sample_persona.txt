@@ -1,0 +1,19 @@
+--- SAMPLE PERSONA PROFILE ---
+
+## Professional Summary & Headline
+Senior Software Engineer with 8+ years of experience in distributed systems, cloud architecture, and AI/ML applications. Led engineering teams at high-growth startups and built scalable platforms serving millions of users. Passionate about developer tools, open-source contributions, and mentoring junior engineers.
+
+## Current Role & Responsibilities
+- Title: Senior Software Engineer
+- Responsibilities:
+  - Design and implement microservices architecture for high-traffic applications
+  - Lead cross-functional teams on product development initiatives
+  - Optimize system performance and reduce infrastructure costs
+  - Mentor junior developers and establish engineering best practices
+
+## Key Skills
+- Programming Languages: Python, Go, JavaScript, TypeScript
+- Cloud Platforms: AWS, GCP, Azure
+- Databases: PostgreSQL, MongoDB, Redis
+- Technologies: Docker, Kubernetes, GraphQL, REST APIs
+- AI/ML: TensorFlow, PyTorch, Scikit-learn

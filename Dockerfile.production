@@ -1,0 +1,79 @@
+# Production Dockerfile for NANDA Resume Agent
+# Multi-stage build for optimized production deployment
+
+# Build stage
+FROM python:3.10-slim as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    cmake \
+    git \
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy requirements and install Python dependencies
+COPY requirements-nanda.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements-nanda.txt
+
+# Install NANDA adapter from local copy
+COPY ../adapter /tmp/adapter
+RUN cd /tmp/adapter && pip install -e .
+
+# Production stage
+FROM python:3.10-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    supervisor \
+    nginx \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --shell /bin/bash appuser
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Copy resume data (this will be overridden in production with volume mount)
+COPY --chown=appuser:appuser data/ ./data/
+
+# Create necessary directories
+RUN mkdir -p \
+    /app/logs \
+    /app/conversation_logs \
+    /var/log/supervisor \
+    && chown -R appuser:appuser /app
+
+# Copy supervisor configuration
+COPY deploy/aws/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy nginx configuration
+COPY deploy/aws/nginx.conf /etc/nginx/sites-available/default
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+# Expose ports (HTTP, HTTPS, A2A)
+EXPOSE 80 443 6000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:6000/api/health || exit 1
+
+# Start supervisor to manage all services
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -1,0 +1,8 @@
+{
+  "instance_id": "i-02296083b1c2e4f47",
+  "elastic_ip": "52.45.204.154",
+  "private_ip": "172.31.93.187",
+  "key_file": "nanda-resume-key.pem",
+  "security_group_id": "sg-09138d7168271bbb1",
+  "region": "us-east-1"
+}

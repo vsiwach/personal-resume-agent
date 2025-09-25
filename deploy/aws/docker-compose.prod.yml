@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  nanda-resume-agent:
+    build:
+      context: ../../
+      dockerfile: Dockerfile.production
+    container_name: nanda-resume-agent
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "6000:6000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PUBLIC_URL=${PUBLIC_URL}
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - AGENT_ID=${AGENT_ID:-vikram_resume_agent_prod}
+      - PORT=6000
+      - IMPROVE_MESSAGES=true
+    volumes:
+      # SSL certificates (will be mounted from Let's Encrypt)
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      # Resume data (persistent storage)
+      - ./data:/app/data
+      # Logs (for monitoring and debugging)
+      - ./logs:/app/logs
+      - ./conversation_logs:/app/conversation_logs
+      # Nginx configuration override
+      - ./nginx.conf:/etc/nginx/sites-available/default:ro
+    networks:
+      - nanda-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  nanda-network:
+    driver: bridge
+
+volumes:
+  ssl-certs:
+    driver: local
+  agent-data:
+    driver: local
